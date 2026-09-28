@@ -2,6 +2,7 @@ package com.sathat.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.sathat.enums.Suit;
 
@@ -34,24 +35,13 @@ public class Player {
     }
 
     public boolean hasSuit(Suit suit){
-        for(Card card : cards){
-            if(card.getSuit() == suit){
-                return true;
-            }
-        }
-        return false;
+        return cards.stream()
+                .filter(Objects::nonNull)
+                .anyMatch(card -> card.getSuit() == suit);
     }
 
     public List<Card> getCards() {
         return cards;
-    }
-
-    public int getCardCount() {
-        return cards.size();
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getName() {

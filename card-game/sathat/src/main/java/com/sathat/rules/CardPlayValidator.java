@@ -1,7 +1,8 @@
 package com.sathat.rules;
 
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 import com.sathat.enums.Suit;
 import com.sathat.model.Card;
@@ -54,58 +55,31 @@ public class CardPlayValidator {
     }
 
     public List<Card> getLegalCards(Player player, Hand hand, Suit troop){
-        List<Card> legalCards = new ArrayList<>();
 
-        /**
-        for(Card card : player.getCards()){
-            if(isValidPlay(player, card, hand, troop)){
-                legalCards.add(card);
-            }
-        }
-         */
+        return player.getCards().stream()
+                .filter(card -> isValidPlay(player, card, hand, troop))
+                .toList();
 
-        //Using lambda
-        player.getCards().forEach((card)->{
-            if(isValidPlay(player, card, hand, troop)){
-                legalCards.add(card);
-            }
-        });
-        
-        return legalCards;
     }
 
 
     public Card getHighestTroopCard(Player player, Suit troop) {
 
-        Card highestTroop = null;
+        return player.getCards().stream()
+                .filter(Objects::nonNull)
+                .filter((card -> card.getSuit() == troop))
+                .max(Comparator.comparingInt(card -> card.getRank().getValue()))
+                .orElse(null);
 
-        for (Card card : player.getCards()) {
 
-            if (card.getSuit() != troop) {
-                continue;
-            }
-
-            if (highestTroop == null || card.getRank().getValue() > highestTroop.getRank().getValue()) {
-
-                highestTroop = card;
-            }
-        }
-
-        return highestTroop;
     }
 
     public Card getLowestCard(List<Card> cards) {
 
-        Card lowest = null;
-
-        for (Card card : cards) {
-
-            if (lowest == null || card.getRank().getValue() < lowest.getRank().getValue()) {
-                lowest = card;
-            }
-        }
-
-        return lowest;
+        return cards.stream()
+                .filter(Objects::nonNull)
+                .min(Comparator.comparingInt(card -> card.getRank().getValue()))
+                .orElse(null);
     }
 
 }

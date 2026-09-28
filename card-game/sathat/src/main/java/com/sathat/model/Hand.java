@@ -6,7 +6,7 @@ import java.util.List;
 import com.sathat.enums.Suit;
 
 public class Hand {
-    
+
     private final Player leader;
     private final Suit troop;
     private final List<PlayedCard> playedCards;
@@ -34,19 +34,18 @@ public class Hand {
     }
     
     public Card getLeadingCard(){
-        if(playedCards.isEmpty()){
-            return null;
-        }
-
-        return playedCards.get(0).getCard();
+        return playedCards.stream()
+                .findFirst()
+                .map(PlayedCard::getCard) //Optional .map method
+                .orElse(null);
     }
 
     public Suit getLeadingSuit(){
-        if(playedCards.isEmpty()){
-            return null;
-        }
-
-        return playedCards.get(0).getCard().getSuit();
+        return playedCards.stream()
+                .findFirst()
+                .map(PlayedCard::getCard)
+                .map(Card::getSuit)
+                .orElse(null);
     }
 
     public boolean isComplete(){
